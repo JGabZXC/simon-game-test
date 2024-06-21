@@ -15,6 +15,7 @@ $('.start').on("click", function() {
     $('.level-title').removeClass("disable");
     $('.level-title').text("Level " + level);
     start = true;
+    nextSequence();
 }); 
 
 $('.btn').on("click", function() {
@@ -27,20 +28,43 @@ $('.btn').on("click", function() {
         }, 100);
 });
 
+function checkAnswer(currentLevel) {
+    if(gamePattern[currentLevel] === userPattern[currentLevel]) {
+        console.log("success");
+
+        if(userClickedPattern.length === gamePattern.length) {
+            setTimeout(function() {
+                nextSequence();
+            }, 1000);
+        }
+    } else {
+        console.log("wrong");
+
+        $('body').addClass("game-over");
+        setTimeout(function () {
+            $('body').removeClass("game-over");
+        }, 200);
+
+        $('.start').removeClass("disable");
+        $('.level-title').addClass("disable");
+
+    }   
+}
+
 function nextSequence() {
     level++;
-    $('.level-title').text = "Level " + level;
+    $('.level-title').text("Level " + level);
 
     let randomNumber = Math.floor(Math.random() * 4);
     let chosenNumber = buttonColours[randomNumber];
     gamePattern.push(chosenNumber);
+
+    $("#" + chosenNumber).fadeOut(100).fadeIn(100);
+    
 }
 
 function clear() {
+    level = 0;
     gamePattern = [];
-    userPattern = [];
-}
-
-function start() {
-    
+    started = false;
 }
